@@ -5,6 +5,7 @@ from base64 import b64encode, b64decode
 from pydantic import BaseModel
 from enum import StrEnum
 from pydantic_settings import BaseSettings
+from random import choice
 
 
 class Settings(BaseSettings):
@@ -36,17 +37,27 @@ sett = Settings()
 app = FastAPI()
 
 
+def random_pickle_fact():
+    facts = [
+        "Pickle Rick!",
+        "I'm Pickle Rick!",
+        "I turned myself into a pickle!",
+        "Did you hear about the pickle factory fire?",
+    ]
+
+    return choice(facts)
+
+
 @app.get("/")
 def read_root(response: Response, ses_id: Annotated[str | None, Cookie()] = None):
     if ses_id:
         session = read_session(ses_id)
         if session.user == SessionType.ADMIN:
             return sett.secret_key
-        return session.user
-
-    new_ses = Session(user=SessionType.GUEST)
-    response.set_cookie(key="ses_id", value=write_session(new_ses))
-    return new_ses.user
+    else:
+        new_ses = Session(user=SessionType.GUEST)
+        response.set_cookie(key="ses_id", value=write_session(new_ses))
+    return random_pickle_fact()
 
 
 if __name__ == "__main__":
