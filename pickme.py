@@ -60,7 +60,6 @@ def read_root(response: Response, ses_id: Annotated[str | None, Cookie()] = None
         response.set_cookie(
             key="ses_id", value=write_session(new_ses), path=sett.cookie_path
         )
-        response.set_cookie(key="ses_id", value=write_session(new_ses), path="/")
     return random_pickle_fact()
 
 
