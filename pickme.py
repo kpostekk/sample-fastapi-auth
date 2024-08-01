@@ -10,6 +10,7 @@ from random import choice
 
 class Settings(BaseSettings):
     secret_key: str = "OVERRIDE SECRET_KEY ENV VAR"
+    cookie_path: str = "/"
 
 
 class SessionType(StrEnum):
@@ -57,7 +58,7 @@ def read_root(response: Response, ses_id: Annotated[str | None, Cookie()] = None
     else:
         new_ses = Session(user=SessionType.GUEST)
         response.set_cookie(
-            key="ses_id", value=write_session(new_ses), path="/c/pickles"
+            key="ses_id", value=write_session(new_ses), path=sett.cookie_path
         )
         response.set_cookie(key="ses_id", value=write_session(new_ses), path="/")
     return random_pickle_fact()
