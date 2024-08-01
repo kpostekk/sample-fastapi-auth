@@ -1,0 +1,6 @@
+services:
+  web:
+    build: .
+    environment:
+      SECRET_KEY: ${SECRET_KEY}
+    restart: always
